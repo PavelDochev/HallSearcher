@@ -1,0 +1,23 @@
+
+<div class="jumbotron">
+    <div class="row">
+      <div class="col-sm">
+        <span>Start Date</span>
+        <p-calendar [(ngModel)]="startDate" [showTime]="true"></p-calendar> {{date7}}
+      </div>
+      <div class="col-sm">
+        <span>End date</span>
+        <p-calendar aria-placeholder="End date" [(ngModel)]="endDate" [showTime]="true"></p-calendar> {{date7}}
+      </div>
+      <div class="col-sm">
+        <span class="attributes">Attributes</span>
+        <p-multiSelect [options]="hallAttributes" [(ngModel)]="selectedCities1"></p-multiSelect>
+      </div>
+      <div class="col-sm">
+        <input type="text" [(ngModel)]="minNumbers" placeholder="Min Number of People">
+      </div>
+      <div class="col-sm">
+          <button>Search</button>
+        </div>
+    </div>
+</div>
