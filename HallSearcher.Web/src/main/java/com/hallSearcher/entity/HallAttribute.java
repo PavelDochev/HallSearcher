@@ -14,6 +14,8 @@ public class HallAttribute implements Serializable {
 
     private String name;
 
+    @ManyToMany
+    private List<Hall> hall;
 
     public long getId() {
         return id;

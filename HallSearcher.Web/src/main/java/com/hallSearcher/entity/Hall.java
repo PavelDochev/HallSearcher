@@ -26,11 +26,13 @@ public class Hall implements Serializable {
 
     private String endOfNightPeriod;
 
+    private int minNumberOfPeople;
+
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinTable(name = "halls_attributes",joinColumns = {@JoinColumn(name = "hall_id")},inverseJoinColumns = {@JoinColumn(name="attribute_id")})
     private Set<HallAttribute> attributes;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<HallAvailability> availabilities;
 
     public long getId() {
@@ -103,5 +105,13 @@ public class Hall implements Serializable {
 
     public void addAvailability(HallAvailability availability){
         this.availabilities.add(availability);
+    }
+
+    public int getMinNumberOfPeople() {
+        return minNumberOfPeople;
+    }
+
+    public void setMinNumberOfPeople(int minNumberOfPeople) {
+        this.minNumberOfPeople = minNumberOfPeople;
     }
 }

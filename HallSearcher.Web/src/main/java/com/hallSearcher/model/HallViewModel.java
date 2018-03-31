@@ -18,6 +18,8 @@ public class HallViewModel {
 
     private String startOfNightPeriod;
 
+    private int minNumberOfPeople;
+
     private String endOfNightPeriod;
 
     private Set<HallAttribute> attributes;
@@ -87,5 +89,13 @@ public class HallViewModel {
 
     public void setEndOfNightPeriod(String endOfNightPeriod) {
         this.endOfNightPeriod = endOfNightPeriod;
+    }
+
+    public int getMinNumberOfPeople() {
+        return minNumberOfPeople;
+    }
+
+    public void setMinNumberOfPeople(int minNumberOfPeople) {
+        this.minNumberOfPeople = minNumberOfPeople;
     }
 }

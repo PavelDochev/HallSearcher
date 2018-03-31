@@ -2,7 +2,6 @@ package com.hallSearcher.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 @Entity
 @Table(name = "hallAvailabilities")
@@ -12,25 +11,12 @@ public class HallAvailability implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private Date startDate;
+    private long startDate;
 
-    private Date endDate;
+    private long endDate;
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
+    @ManyToOne
+    private Hall hall;
 
     public long getId() {
         return id;
@@ -38,5 +24,21 @@ public class HallAvailability implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(long startDate) {
+        this.startDate = startDate;
+    }
+
+    public long getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(long endDate) {
+        this.endDate = endDate;
     }
 }

@@ -4,9 +4,7 @@ import com.hallSearcher.model.HallSearchViewModel;
 import com.hallSearcher.model.HallViewModel;
 import com.hallSearcher.service.HallService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,7 +17,8 @@ public class HallController {
         this.hallService = hallService;
     }
 
-    @GetMapping("api/hall/search")
+    @CrossOrigin
+    @PostMapping("api/hall/search")
     public List<HallViewModel> searchHalls(@RequestBody HallSearchViewModel hallSearchVM){
 
         return this.hallService.getHallsBySearchCriteria(hallSearchVM);

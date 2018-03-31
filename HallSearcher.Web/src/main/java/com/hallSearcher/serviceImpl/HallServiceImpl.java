@@ -13,7 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -71,24 +78,25 @@ public class HallServiceImpl implements HallService {
     @Override
     public List<HallViewModel> getHallsBySearchCriteria(HallSearchViewModel searchViewModel) {
 
-        Type hallAttributesListType = new TypeToken<List<HallAttribute>>() { }.getType();
+        Type hallListType = new TypeToken<List<HallViewModel>>() { }.getType();
 
-        List<HallViewModel> halls = new ArrayList<>();
+        List<Long> hallAttrIds = new ArrayList<>();
 
-        this.hallRepository
-                .findAllByAvailabilitiesStartDateLessThan(
-                        searchViewModel.getStartDate(),
-                        searchViewModel.getEndDate(),
-                        this.modelMapper.map(searchViewModel.getHallAttributes(),hallAttributesListType),
-                        searchViewModel.getMinPeople());
+        searchViewModel.getHallAttributes().forEach(x-> hallAttrIds.add(x.getId()));
 
+        long startDate = searchViewModel.getStartDate().atZone(ZoneId.systemDefault()).toEpochSecond();
+        long endDate = searchViewModel.getEndDate().atZone(ZoneId.systemDefault()).toEpochSecond();
 
+        long attrNumbers= hallAttrIds.size();
+        List<Hall> foundHalls = this.hallRepository
+                        .findBySearch(
+                                startDate,
+                                endDate,
+                                hallAttrIds,
+                                searchViewModel.getMinPeople(),
+                                attrNumbers);
 
-//        this.hallRepository.findAllBySearchCriteria(searchViewModel).forEach(x -> {
-//            HallViewModel hall = this.modelMapper.map(x, HallViewModel.class);
-//            hall.setAttributes(this.modelMapper.map(x.getAttributes(), hallAttributesListType));
-//            halls.add(hall);
-//        });
+        List<HallViewModel> halls = this.modelMapper.map(foundHalls,hallListType);
 
         return halls;
     }

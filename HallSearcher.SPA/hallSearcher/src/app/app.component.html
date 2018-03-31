@@ -3,21 +3,47 @@
     <div class="row">
       <div class="col-sm">
         <span>Start Date</span>
-        <p-calendar [(ngModel)]="startDate" [showTime]="true"></p-calendar> {{date7}}
+        <p-calendar [(ngModel)]="hallSearchViewModel.startDate" [showTime]="true"></p-calendar> {{date7}}
       </div>
       <div class="col-sm">
         <span>End date</span>
-        <p-calendar aria-placeholder="End date" [(ngModel)]="endDate" [showTime]="true"></p-calendar> {{date7}}
+        <p-calendar aria-placeholder="End date" [(ngModel)]="hallSearchViewModel.endDate" [showTime]="true"></p-calendar> {{date7}}
       </div>
       <div class="col-sm">
         <span class="attributes">Attributes</span>
-        <p-multiSelect [options]="hallAttributes" [(ngModel)]="selectedCities1"></p-multiSelect>
+        <p-multiSelect [options]="hallAttributes" [(ngModel)]="hallSearchViewModel.hallAttributes"></p-multiSelect>
       </div>
       <div class="col-sm">
-        <input type="text" [(ngModel)]="minNumbers" placeholder="Min Number of People">
+        <input type="text" [(ngModel)]="hallSearchViewModel.minPeople" placeholder="Min Number of People">
       </div>
       <div class="col-sm">
-          <button>Search</button>
+          <button (click)="searchHalls()">Search</button>
         </div>
     </div>
 </div>
+<div class="row">
+    <div *ngFor="let hall of halls" class="col-md-3">
+      <div class="card mb-4 box-shadow">
+        <div class="card-body">
+          <div class="card-text">
+            <p>
+               Name: {{hall.name}}
+            </p>
+            <p>Price: {{hall.price}} ether</p>
+            <p>Average price for given hours: {{hall.avrgPrice}}</p>
+            <span *ngFor="let attribute of hall.attributes">
+              {{attribute.name}} |
+            </span>
+            <p>
+                Taken dates
+            </p>
+            
+            <p *ngFor="let availability of hall.availabilities">
+                {{availability.startDate}} - {{availability.endDate}}
+            </p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

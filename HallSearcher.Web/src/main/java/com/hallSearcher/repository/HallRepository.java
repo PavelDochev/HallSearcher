@@ -2,11 +2,11 @@ package com.hallSearcher.repository;
 
 import com.hallSearcher.entity.Hall;
 import com.hallSearcher.entity.HallAttribute;
-import com.hallSearcher.model.HallSearchViewModel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -15,11 +15,42 @@ public interface HallRepository extends JpaRepository<Hall,Long> {
 
     List<Hall> findAllByAttributes(Set<HallAttribute> attributesSet);
 
-    List<Hall> findAllByAvailabilitiesStartDateLessThan(Date startDate,Date endDate,Set<HallAttribute> hallAttributes,int minNumberOfPeople);
 
-//    select halls.name,hall_availabilities.start_date,hall_availabilities.end_date from halls
-//    join halls_availabilities ha on ha.hall_id = halls.id
-//    join hall_availabilities on ha.availabilities_id = hall_availabilities.id
-//    where not ('3918-04-02 19:00:00' > start_date or '3918-04-02 17:00:00' > end_date)
+    @Query("select h from Hall h\n" +
+            "join fetch h.availabilities ha\n" +
+            "join fetch h.attributes hAttr\n")
+    List<Hall> findJoined();
+
+
+
+//    @Query(value = "select h.id,h.name from halls h\n" +
+//            "join halls_attributes hattr on hattr.hall_id= h.id\n" +
+//            "join hall_attributes on hall_attributes.id = hattr.attribute_id\n" +
+//            "join halls_availabilities ha on ha.hall_id = h.id\n" +
+//            "join hall_availabilities on ha.availabilities_id = hall_availabilities.id\n" +
+//            "where (:endDate < hall_availabilities.start_date or :startDate > hall_availabilities.end_date)\n" +
+//            "and hall_attributes.id in :hallAttrIds\n" +
+//            "and h.min_number_of_people > :numOfPpl\n" +
+//            "group by h.id"
+//            ,nativeQuery = true)
+//    List<Object> findAllBySearchCriteria(@Param("startDate") long startDate,
+//                                       @Param("endDate") long endDate,
+//                                       @Param("hallAttrIds")List<Long> hallAttrIds,
+//                                       @Param("numOfPpl")int minNumberOfPeople);
+
+
+    @Query("select h from Hall h \n"+
+            "join h.availabilities ha\n" +
+            "join h.attributes hAttr\n"+
+            "where (:endDate < ha.startDate or :startDate > ha.endDate)\n" +
+            "and hAttr.id in :hallAttrIds\n" +
+            "and h.minNumberOfPeople > :numOfPpl\n" +
+            "group by h.id\n" +
+            "having count(distinct hAttr.id) = :numOfAttributes")
+    List<Hall> findBySearch(@Param("startDate") long startDate,
+                            @Param("endDate") long endDate,
+                            @Param("hallAttrIds")List<Long> hallAttrIds,
+                            @Param("numOfPpl")int minNumberOfPeople,
+                            @Param("numOfAttributes") long numOfAttributes);
 
 }
